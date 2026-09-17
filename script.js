@@ -1,3 +1,13 @@
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+
+function resetPagePosition() {
+  window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' }));
+}
+
+resetPagePosition();
+window.addEventListener('pageshow', resetPagePosition);
+
 const yes = document.querySelector('#yesButton');
 const no = document.querySelector('#noButton');
 const reaction = document.querySelector('#reaction');
