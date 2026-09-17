@@ -11,6 +11,7 @@ const letterFinale = document.querySelector('#letterFinale');
 let tries = 0;
 let letterTries = 0;
 let photoIndex = 0;
+let tourMoving = false;
 
 function startJourney() {
   yes.classList.add('autopick');
@@ -43,6 +44,9 @@ function flee(event) {
 }
 
 function showNextPhoto() {
+  if (tourMoving) return;
+  tourMoving = true;
+  nextPhoto.disabled = true;
   cards[photoIndex].classList.remove('active');
   photoIndex += 1;
   if (photoIndex >= cards.length) {
@@ -50,6 +54,7 @@ function showNextPhoto() {
     letter.classList.add('unlocked');
     requestAnimationFrame(() => letter.scrollIntoView({ behavior: 'smooth' }));
     setTimeout(() => letter.classList.add('visible'), 450);
+    tourMoving = false;
     return;
   }
   const nextCard = cards[photoIndex];
@@ -57,7 +62,11 @@ function showNextPhoto() {
   const cardTop = nextCard.getBoundingClientRect().top + window.scrollY;
   const centeredTop = cardTop - Math.max(24, (window.innerHeight - nextCard.offsetHeight) / 2);
   window.scrollTo({ top: Math.max(window.scrollY, centeredTop), behavior: 'smooth' });
-  if (photoIndex === cards.length - 1) nextPhoto.innerHTML = 'Перейти к письму <span>↘</span>';
+  if (photoIndex === cards.length - 1) nextPhoto.innerHTML = 'Перейти к письму <span>→</span>';
+  setTimeout(() => {
+    tourMoving = false;
+    nextPhoto.disabled = false;
+  }, 560);
 }
 
 yes.addEventListener('click', startJourney);
